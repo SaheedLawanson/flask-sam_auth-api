@@ -172,6 +172,9 @@ def confirm_sign_up():
         # response.pop('ResponseMetadata')
 
         return response_object("Successfully confirmed signup", 200, data=response)
+    
+    except cognito_client.exceptions.CodeMismatchException:
+        return response_object("Supplied code is invalid", 402)
 
     except SystemError:
         return response_object("An error occurred", 400) 
