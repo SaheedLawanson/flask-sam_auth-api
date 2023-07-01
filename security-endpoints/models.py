@@ -1,0 +1,103 @@
+from pynamodb.models import Model
+from pynamodb.attributes import UnicodeAttribute, \
+    BooleanAttribute
+import os
+
+if os.environ["AWS_ENVIRONMENT"] == "local":
+    class UserModel(Model):
+        class Meta:
+            table_name = "users"
+            region = os.environ["AWS_REGION"]
+            host = "http://localhost:8000"
+            
+        email = UnicodeAttribute(hash_key=True)
+        phone_number = UnicodeAttribute()
+        username = UnicodeAttribute()
+        fullname = UnicodeAttribute()
+        first_name = UnicodeAttribute()
+        last_name = UnicodeAttribute()
+        address = UnicodeAttribute()
+        gender = UnicodeAttribute()
+        dob = UnicodeAttribute()
+        date_created = UnicodeAttribute()
+        is_recurring = BooleanAttribute()
+        account_number = UnicodeAttribute()
+        delete_flag = BooleanAttribute()
+        last_logged_in = UnicodeAttribute()
+        last_modified = UnicodeAttribute()
+        bvn = UnicodeAttribute()
+        pin = UnicodeAttribute()
+        date_joined = UnicodeAttribute()
+        is_superuser = BooleanAttribute()
+        is_staff = BooleanAttribute()
+        is_active = BooleanAttribute()
+        receive_notification = BooleanAttribute()
+        image_id = UnicodeAttribute()
+        profile_type = UnicodeAttribute()
+        balance = UnicodeAttribute()
+        tenant_id = UnicodeAttribute()
+        promo_code = UnicodeAttribute()
+        formatted_date = UnicodeAttribute()
+        father_name = UnicodeAttribute()
+        status = UnicodeAttribute()
+        city = UnicodeAttribute()
+        rating = UnicodeAttribute()
+        state = UnicodeAttribute()
+        country = UnicodeAttribute()
+        question_1 = UnicodeAttribute()
+        question_2 = UnicodeAttribute()
+        question_3 = UnicodeAttribute()
+        answer_1 = UnicodeAttribute()
+        answer_2 = UnicodeAttribute()
+        answer_3 = UnicodeAttribute()
+        docType = UnicodeAttribute()
+        countryCode = UnicodeAttribute()
+
+if os.environ["AWS_ENVIRONMENT"] == "cloud":
+    class UserModel(Model):
+        class Meta:
+            table_name = os.environ["TABLE_NAME"]
+            region = os.environ["AWS_REGION"]
+            
+        email = UnicodeAttribute(hash_key=True)
+        phone_number = UnicodeAttribute()
+        username = UnicodeAttribute()
+        fullname = UnicodeAttribute()
+        first_name = UnicodeAttribute()
+        last_name = UnicodeAttribute()
+        address = UnicodeAttribute()
+        gender = UnicodeAttribute()
+        dob = UnicodeAttribute()
+        date_created = UnicodeAttribute()
+        is_recurring = BooleanAttribute()
+        account_number = UnicodeAttribute()
+        delete_flag = BooleanAttribute()
+        last_logged_in = UnicodeAttribute()
+        last_modified = UnicodeAttribute()
+        bvn = UnicodeAttribute()
+        pin = UnicodeAttribute()
+        date_joined = UnicodeAttribute()
+        is_superuser = BooleanAttribute()
+        is_staff = BooleanAttribute()
+        is_active = BooleanAttribute()
+        receive_notification = BooleanAttribute()
+        image_id = UnicodeAttribute()
+        profile_type = UnicodeAttribute()
+        balance = UnicodeAttribute()
+        tenant_id = UnicodeAttribute()
+        promo_code = UnicodeAttribute()
+        formatted_date = UnicodeAttribute()
+        father_name = UnicodeAttribute()
+        status = UnicodeAttribute()
+        city = UnicodeAttribute()
+        rating = UnicodeAttribute()
+        state = UnicodeAttribute()
+        country = UnicodeAttribute()
+        question_1 = UnicodeAttribute()
+        question_2 = UnicodeAttribute()
+        question_3 = UnicodeAttribute()
+        answer_1 = UnicodeAttribute()
+        answer_2 = UnicodeAttribute()
+        answer_3 = UnicodeAttribute()
+        docType = UnicodeAttribute()
+        countryCode = UnicodeAttribute()

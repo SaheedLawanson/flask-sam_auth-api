@@ -1,0 +1,299 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for serverless-flask-test
+
+# try:
+#     from werkzeug.wrappers import BaseRequest
+# except:
+#     from werkzeug.wrappers import Request as BaseRequest
+
+Resources:
+  SecurityApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: security_api
+      StageName: dev
+      OpenApiVersion: "3.0.1"
+
+  SecurityFunctionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: 
+          - Action:
+              - "dynamodb:PutItem"
+              - "dynamodb:GetItem"
+            Effect: "Allow"
+            Resource: !GetAtt MyTable.Arn
+      PolicyName: sign_up_policy
+      Roles:
+        - !Ref SecurityFunctionRole
+
+  SecurityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: security_endpoints
+      CodeUri: security-endpoints/
+      Handler: app.app
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MyTable
+          CLIENT_ID: !Ref UserPoolClientCognito
+          AWS_ENVIRONMENT: cloud
+      Events:
+        Proxy:
+          Type: Api
+          Properties:
+            Method: ANY
+            Path: /{proxy+}
+            RestApiId: !Ref SecurityApi
+
+  UserPoolCognito:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName:
+        test-userpool
+      AutoVerifiedAttributes:
+        - email      
+      UsernameAttributes:
+        - email
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 9
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireUppercase: true
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: phone_number
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: preferred_username
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: name
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: given_name
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: family_name
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: address
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: gender
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: birthdate
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: date_created
+          AttributeDataType: String
+        - Name: is_recurring
+          AttributeDataType: Boolean
+        - Name: account_number
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 10
+        - Name: delete_flag
+          AttributeDataType: Boolean
+        - Name: last_logged_in
+          AttributeDataType: String
+        - Name: last_modified
+          AttributeDataType: String
+        - Name: bvn
+          AttributeDataType: String
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 14
+        - Name: pin
+          AttributeDataType: String
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 14
+        - Name: date_joined
+          AttributeDataType: String
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: is_superuser
+          AttributeDataType: Boolean
+        - Name: is_staff
+          AttributeDataType: Boolean
+        - Name: is_active
+          AttributeDataType: Boolean
+        - Name: receive_notification
+          AttributeDataType: Boolean
+        - Name: image_id
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: profile_type
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: balance
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: tenant_id
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: promo_code
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: formatted_date
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: father_name
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: status
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: city
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: rating
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: state
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: country
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: question_1
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: question_2
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: question_3
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: answer_1
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: answer_2
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: answer_3
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: docType
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+        - Name: countryCode
+          AttributeDataType: String
+          Mutable: false
+          StringAttributeConstraints:
+            MinLength: 0
+            MaxLength: 200
+
+  UserPoolClientCognito:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: my_userpool_client
+      AccessTokenValidity: 10
+      UserPoolId: !Ref UserPoolCognito
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+
+  MyTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: my_table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+
+
+Outputs:
+  CognitoClientId:
+    Value: !Ref UserPoolClientCognito
+  TableName:
+    Value: !Ref MyTable
